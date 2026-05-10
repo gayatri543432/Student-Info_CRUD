@@ -30,21 +30,24 @@ const fnameControl=document.getElementById('fname');
 const lnameControl=document.getElementById('lname');
 const emailControl=document.getElementById('email');
 const contactControl=document.getElementById('contact');
+const addstdbtn=document.getElementById('addstdbtn');
+const updatebtn=document.getElementById('updatebtn');
+
 
 
 function templating(ele){
     let result='';
     ele.forEach((std,i)=>{
-        result += `<tr>
+        result += `<tr id=${std.stdId}>
                                     <td>${i+1}</td>
                                     <td>${std.fname} ${std.lname}</td>
                                     <td>${std.email}</td>
                                     <td>${std.contact}</td>
                                     <td>
-                                        <i class="fa-solid fa-pen-to-square fa-2x text-primary"></i>
+                                        <i class="fa-solid fa-pen-to-square fa-2x text-primary" onclick="onEdit(this)"></i>
                                     </td>
                                     <td>
-                                        <i class="fa-solid fa-trash-can fa-2x text-danger"></i>
+                                        <i class="fa-solid fa-trash-can fa-2x text-danger " onclick="onStdRemove(this)"></i>
                                     </td>
                   </tr>`
     })
@@ -80,5 +83,66 @@ function onstdSubmit(eve){
     formContainer.append(tr);
     
 }
+let EDIT_ID;
+function onEdit(eve){
+    EDIT_ID = eve.closest('tr').id;
+    let EDIT_OBJ = stdArr.find(i=>i.stdId === EDIT_ID);
 
-stdForm.addEventListener('submit',onstdSubmit)
+    fnameControl.value=EDIT_OBJ.fname;
+    lnameControl.value=EDIT_OBJ.lname;
+    emailControl.value=EDIT_OBJ.email;
+    contactControl.value=EDIT_OBJ.contact;
+
+   addstdbtn.classList.add('d-none')
+   updatebtn.classList.remove('d-none')
+   
+
+}
+
+
+function onUpdate(){
+    UPDATE_ID =EDIT_ID;
+    let UPDATE_OBJ={
+        fname :fnameControl.value,
+        lname :lnameControl.value,
+        email :emailControl.value,
+        contact :contactControl.value
+    }
+    let getIndex = stdArr.findIndex(std=>std.stdId === UPDATE_ID);
+
+    stdArr[getIndex]=UPDATE_OBJ;
+
+    let tr=document.getElementById(UPDATE_ID).children
+    tr[1].innerText=`${UPDATE_OBJ.fname} ${UPDATE_OBJ.lname}`
+    tr[2].innerText=`${UPDATE_OBJ.email}`
+    tr[2].innerText=`${UPDATE_OBJ.contact}`
+
+   
+   addstdbtn.classList.remove('d-none')
+   updatebtn.classList.add('d-none')
+}
+function onStdRemove(ele){
+    let REMOVE_ID = ele.closest('tr').id
+    let getConfirm=confirm('Are you sure you want to remove the student?');
+    if(getConfirm){
+        let getIndex = stdArr.findIndex(std=>std.stdId === REMOVE_ID)
+    
+
+    let REMOVE_STD =stdArr.splice(getIndex,1)
+    ele.closest('tr').remove()
+    let alltrs=[...document.querySelectorAll('#id')]
+    alltrs.forEach((tr,i)=>{
+        tr.firstElementChild.innerText =i+1;
+    })
+
+    Swal.fire({
+        title :'The student Removed Successfully',
+        icon:'success',
+        timer:3000
+    })
+}
+}
+
+
+stdForm.addEventListener('submit',onstdSubmit);
+updatebtn.addEventListener('click',onUpdate)
