@@ -25,6 +25,12 @@ let stdArr = [
 ]
 
 const formContainer=document.getElementById('formContainer');
+const stdForm=document.getElementById('stdForm');
+const fnameControl=document.getElementById('fname');
+const lnameControl=document.getElementById('lname');
+const emailControl=document.getElementById('email');
+const contactControl=document.getElementById('contact');
+
 
 function templating(ele){
     let result='';
@@ -46,3 +52,33 @@ function templating(ele){
 }
 templating(stdArr);
 
+function onstdSubmit(eve){
+    eve.preventDefault();
+    let NEW_OBJ ={
+        fname : fnameControl.value, 
+        lname : lnameControl.value, 
+        email : emailControl.value,
+        contact :contactControl.value,
+        stdId : Date.now().toString()
+    }
+
+    stdArr.push(NEW_OBJ);
+    stdForm.reset();
+
+    let tr=document.createElement('tr');
+    tr.id =NEW_OBJ.stdId;
+    tr.innerHTML=`                  <td>${stdArr.length}</td>
+                                    <td>${NEW_OBJ.fname} ${NEW_OBJ.lname}</td>
+                                    <td>${NEW_OBJ.email}</td>
+                                    <td>${NEW_OBJ.contact}</td>
+                                    <td>
+                                        <i class="fa-solid fa-pen-to-square fa-2x text-primary"></i>
+                                    </td>
+                                    <td>
+                                        <i class="fa-solid fa-trash-can fa-2x text-danger"></i>
+                                    </td>`
+    formContainer.append(tr);
+    
+}
+
+stdForm.addEventListener('submit',onstdSubmit)
