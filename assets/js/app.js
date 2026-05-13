@@ -38,7 +38,7 @@ const updatebtn=document.getElementById('updatebtn');
 function templating(ele){
     let result='';
     ele.forEach((std,i)=>{
-        result += `<tr id=${std.stdId}>
+        result += `<tr id="${std.stdId}">
                                     <td>${i+1}</td>
                                     <td>${std.fname} ${std.lname}</td>
                                     <td>${std.email}</td>
@@ -75,10 +75,10 @@ function onstdSubmit(eve){
                                     <td>${NEW_OBJ.email}</td>
                                     <td>${NEW_OBJ.contact}</td>
                                     <td>
-                                        <i class="fa-solid fa-pen-to-square fa-2x text-primary"></i>
+                                        <i class="fa-solid fa-pen-to-square fa-2x text-primary" onclick="onEdit(this)"></i>
                                     </td>
                                     <td>
-                                        <i class="fa-solid fa-trash-can fa-2x text-danger"></i>
+                                        <i class="fa-solid fa-trash-can fa-2x text-danger"  onclick="onStdRemove(this)"></i>
                                     </td>`
     formContainer.append(tr);
     
@@ -106,7 +106,8 @@ function onUpdate(){
         fname :fnameControl.value,
         lname :lnameControl.value,
         email :emailControl.value,
-        contact :contactControl.value
+        contact :contactControl.value,
+        stdId : UPDATE_ID
     }
     let getIndex = stdArr.findIndex(std=>std.stdId === UPDATE_ID);
 
@@ -115,7 +116,7 @@ function onUpdate(){
     let tr=document.getElementById(UPDATE_ID).children
     tr[1].innerText=`${UPDATE_OBJ.fname} ${UPDATE_OBJ.lname}`
     tr[2].innerText=`${UPDATE_OBJ.email}`
-    tr[2].innerText=`${UPDATE_OBJ.contact}`
+    tr[3].innerText=`${UPDATE_OBJ.contact}`
 
    
    addstdbtn.classList.remove('d-none')
@@ -130,7 +131,7 @@ function onStdRemove(ele){
 
     let REMOVE_STD =stdArr.splice(getIndex,1)
     ele.closest('tr').remove()
-    let alltrs=[...document.querySelectorAll('#id')]
+    let alltrs=[...document.querySelectorAll('tr')]
     alltrs.forEach((tr,i)=>{
         tr.firstElementChild.innerText =i+1;
     })
